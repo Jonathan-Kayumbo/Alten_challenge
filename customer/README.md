@@ -1,3 +1,5 @@
+This will create a portainer as a service and from GUI , i can control the status of other microservies setup ../vehicles 
+
 # Usage
 
 This setup comes up with the [Traefik](https://github.com/containous/traefik) v2.2.8 reverse proxy to access the Portainer instance via a virtual host, has support for SSL certificates using Let's Encrypt and automatic redirection from http to https.
@@ -13,7 +15,3 @@ Deploy this stack on any Docker node:
 ```
 docker-compose up -d
 ```
-
-And then access Portainer by hitting [http://portainer.yourdomain.com](http://portainer.yourdomain.com) with a web browser.
-
-**NOTE**: Your machine must be able to resolve `portainer.yourdomain.com` (or your own domain if you updated it).
