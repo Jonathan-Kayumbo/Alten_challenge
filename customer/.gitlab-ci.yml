@@ -1,0 +1,54 @@
+stages:
+  - build
+  - test
+  - deploy
+  - Cleanup
+
+
+variables:
+  # from https://storage.googleapis.com/kubernetes-release/release/stable.txt
+  K8S_STABLE_VERSION_URL: https://storage.googleapis.com/kubernetes-release/release/v1.10.4/bin/linux/amd64/kubectl
+
+image: tmaier/docker-compose:latest
+services:
+  - docker:dind
+before_script:
+  - echo "Hello world"
+  
+build:
+  stage: build
+  script:
+    - docker-compose up -d
+  only: &deployable-branches
+    - master
+
+test:
+  stage: test
+  script:
+    - docker ps 
+    - exit 0
+  dependencies:
+    - build
+
+deploy:
+  stage: deploy
+  image: dtzar/helm-kubectl
+  script:
+    - kubectl config set-cluster k8s --server="${SERVER}"
+    - kubectl config set clusters.k8s.certificate-authority-data ${CERTIFICATE_AUTHORITY_DATA}
+    - kubectl config set-credentials gitlab --token="${USER_TOKEN}"
+    - kubectl config set-context default --cluster=k8s --user=gitlab
+    - kubectl config use-context default
+    - kubectl get pods
+    - kubectl cluster-info
+    - cat ~/.kube/config
+    - kubectl cluster-info
+    # If no error, connection to the cluster from the pipeline script is OK
+    # TODO: write a deploy script
+    - kubectl set image deployment/alten-portainer portainer-container=v1
+    - kubectl rollout status deployment/alten-portainer
+  only: *deployable-branches
+  dependencies:
+    - test
+
+
