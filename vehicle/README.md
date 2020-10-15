@@ -1,5 +1,12 @@
 # python-microservice
 
+This will create a complete Azure Devops pipeline to: 
+
+- Create all the docker containes as Microservices 
+- Push the containers to Azure Container Registry 
+- Deploy them to Azure kubernets Cluster Pod 
+ 
+ # Missing Part: Auto dicsonnect /connect is not implemetned yet
 
 This is a basic approach of building a Microservice on top of Flask, with some useful packages like:
 
